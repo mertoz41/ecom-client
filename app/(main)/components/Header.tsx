@@ -1,20 +1,27 @@
-"use client";
 import CartDrawer from "./CartDrawer";
 import { FaRegHeart } from "react-icons/fa";
 import Link from "next/link";
-export default function Header() {
+import apiClient from "@/utils/apiClient";
+export default async function Header() {
+  let categories = [];
+  try {
+    const response = await apiClient.get("/categories");
+    categories = response.data;
+  } catch {
+    console.error("error");
+  }
   const renderBottomRow = () => (
     <div className="flex items-center justify-center border-b border-b-gray-300 py-3">
       {/* Categories */}
       <nav>
         <ul className="space-y-2 flex gap-2">
-          {["Electronics", "Clothing", "Books", "Toys"].map((category) => (
+          {categories.map((category) => (
             <li key={category}>
               <a
                 href="#"
                 className="text-gray-700 hover:text-blue-600 text-sm block"
               >
-                {category}
+                {category.name}
               </a>
             </li>
           ))}
