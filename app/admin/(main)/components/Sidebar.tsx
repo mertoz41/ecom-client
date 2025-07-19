@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import { useAuthStore } from "@/app/store/authStore";
+import { useRouter } from "next/navigation";
 const navItems = [
   { name: "Dashboard", path: "/admin/dashboard" },
   { name: "Products", path: "/admin/products" },
@@ -12,6 +13,8 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <aside className="w-64 bg-gray-800 flex flex-col justify-between text-white p-4">
@@ -31,7 +34,14 @@ export default function Sidebar() {
           ))}
         </nav>
       </div>
-      <button>Logout</button>
+      <button
+        onClick={() => {
+          logout();
+          router.push("/admin/login");
+        }}
+      >
+        Logout
+      </button>
     </aside>
   );
 }

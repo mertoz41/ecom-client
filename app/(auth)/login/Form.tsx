@@ -3,7 +3,8 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store/authStore";
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
@@ -14,6 +15,9 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Form() {
+  const { login, loading } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -21,10 +25,9 @@ export default function Form() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Login data:", data);
-    // request will be made with server action
+  const onSubmit = async (data: LoginFormData) => {
+    const loggedInUser = await login(data.email, data.password);
+    router.push(loggedInUser?.role === "admin" ? "/admin/dashboard" : "");
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
