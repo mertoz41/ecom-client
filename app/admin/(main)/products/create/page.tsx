@@ -1,199 +1,190 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import apiClient from "@/utils/apiClient";
+import VariantOptionSelector from "./VariantOptionSelector";
+import VariantTable from "./VariantTable";
+export default function ProductEditor() {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [tableData, setTableData] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  console.log(selectedCategory);
+  useEffect(() => {
+    getCategories();
+  }, []);
 
-export default function CreateProductPage() {
-  const [specs, setSpecs] = useState([{ key: "", value: "" }]);
-  const [variants, setVariants] = useState([{ size: "", color: "" }]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [featured, setFeatured] = useState(false);
-
-  const addSpec = () => setSpecs([...specs, { key: "", value: "" }]);
-  const removeSpec = (index: number) =>
-    setSpecs(specs.filter((_, i) => i !== index));
-
-  const addVariant = () => setVariants([...variants, { size: "", color: "" }]);
-  const removeVariant = (index: number) =>
-    setVariants(variants.filter((_, i) => i !== index));
-
-  const handleTagInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTags(e.target.value.split(",").map((tag) => tag.trim()));
+  const getCategories = async () => {
+    try {
+      const response = await apiClient("/categories");
+      setCategories(response.data);
+    } catch {
+      console.error("something went wrong");
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle your form submission logic here
-    alert("Product submitted! (hook this to your backend)");
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = categories.find((cat) => cat._id === e.target.value);
+    if (selected) {
+      setSelectedCategory(selected);
+    }
   };
+  console.log(tableData);
+  const createProduct = async () => {
+    console.log(name, description, tableData);
+    // const primaryVariantName = selectedCategory.primaryVariant.name;
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("selectedCategoryId", selectedCategory._id);
 
+    tableData.forEach((primaryItem, pIndex) => {
+      const primaryVariantName = selectedCategory.primaryVariant.name;
+
+      formData.append(
+        `variants[${pIndex}][primaryVariantName]`,
+        primaryVariantName
+      );
+      formData.append(
+        `variants[${pIndex}][primaryVariantValue]`,
+        primaryItem.value
+      );
+
+      // Add sub-variants (e.g., size, stock, price, etc.)
+      primaryItem.variants.forEach((variant, vIndex) => {
+        Object.entries(variant).forEach(([key, value]) => {
+          if (key !== "image") {
+            formData.append(
+              `variants[${pIndex}][variants][${vIndex}][${key}]`,
+              String(value)
+            );
+          }
+        });
+      });
+
+      // Add images array per primary variant
+      Array.from(primaryItem.images).forEach((file, imgIndex) => {
+        formData.append(`variants[${pIndex}][images][${imgIndex}]`, file);
+      });
+    });
+
+    // formData.append("name", name);
+    // formData.append("description", description);
+    // formData.append("selectedCategoryId", selectedCategory._id);
+
+    // // variants is your tableData state array
+    // tableData.forEach((primaryItem, pIndex) => {
+    //   // Append primary variant name and primary variant value (the selected option)
+    //   // Assuming you have primaryVariantName available in scope
+    //   formData.append(
+    //     `variants[${pIndex}][primaryVariantName]`,
+    //     primaryVariantName
+    //   );
+    //   formData.append(
+    //     `variants[${pIndex}][primaryVariantValue]`,
+    //     primaryItem.value
+    //   );
+
+    //   primaryItem.variants.forEach((variant, vIndex) => {
+    //     // Append price, stock, and all variant option fields except image
+    //     Object.entries(variant).forEach(([key, value]) => {
+    //       if (key !== "image") {
+    //         formData.append(
+    //           `variants[${pIndex}][${vIndex}][${key}]`,
+    //           String(value)
+    //         );
+    //       }
+    //     });
+    //   });
+
+    //   // Append images separately (images is array of File)
+    //   Array.from(primaryItem.images).forEach((file, i) => {
+    //     formData.append(`variants[${pIndex}][images][${i}]`, file);
+    //   });
+    // });
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(key, value.name, value.size, value.type);
+      } else {
+        console.log(key, value);
+      }
+    }
+    const response = await apiClient.post("/products", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response);
+  };
   return (
-    <div className="max-w-4xl mx-auto py-8 space-y-6">
-      <h1 className="text-2xl font-bold">Create New Product</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-medium">Product Name</label>
-            <input type="text" required className="w-full p-2 border rounded" />
-          </div>
-          <div>
-            <label className="block font-medium">Price ($)</label>
-            <input
-              type="number"
-              step="0.01"
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-        </div>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <h1 className="text-3xl font-semibold">Edit Product</h1>
 
+      <div className="space-y-4">
         <div>
-          <label className="block font-medium">Description</label>
-          <textarea rows={4} className="w-full p-2 border rounded" />
+          <label className="block text-sm font-medium mb-1">Product Name</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border border-gray-300 rounded-md p-2"
+            placeholder="Air Jordan 1"
+          />
         </div>
-
-        {/* Category */}
         <div>
-          <label className="block font-medium">Category</label>
-          <select className="w-full p-2 border rounded">
-            <option>Clothing</option>
-            <option>Accessories</option>
-            <option>Footwear</option>
-            <option>Other</option>
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            className="w-full border border-gray-300 rounded-md p-2"
+            placeholder="Sleek high-top sneakers..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Category</label>
+          <select value={selectedCategory?._id || ""} onChange={handleChange}>
+            <option value="" disabled>
+              Select a category
+            </option>
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
           </select>
         </div>
+      </div>
 
-        {/* Product Images */}
-        <div>
-          <label className="block font-medium">Product Images</label>
-          <input type="file" multiple className="w-full p-2 border rounded" />
-        </div>
+      <hr className="border-t my-6" />
 
-        {/* Specifications */}
-        <div>
-          <label className="block font-medium mb-2">Specifications</label>
-          {specs.map((spec, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                placeholder="Key"
-                value={spec.key}
-                onChange={(e) =>
-                  setSpecs(
-                    specs.map((s, i) =>
-                      i === index ? { ...s, key: e.target.value } : s
-                    )
-                  )
-                }
-                className="w-1/2 p-2 border rounded"
-              />
-              <input
-                placeholder="Value"
-                value={spec.value}
-                onChange={(e) =>
-                  setSpecs(
-                    specs.map((s, i) =>
-                      i === index ? { ...s, value: e.target.value } : s
-                    )
-                  )
-                }
-                className="w-1/2 p-2 border rounded"
-              />
-              <button
-                type="button"
-                onClick={() => removeSpec(index)}
-                className="text-red-600"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addSpec}
-            className="text-sm text-blue-600 underline"
-          >
-            + Add Specification
-          </button>
-        </div>
+      <h2 className="text-2xl font-semibold">Variants</h2>
+      {selectedCategory && (
+        <VariantOptionSelector
+          variants={selectedCategory?.variants}
+          selectedOptions={selectedOptions}
+          setSelectedOptions={setSelectedOptions}
+        />
+      )}
+      {selectedCategory && (
+        <VariantTable
+          tableData={tableData}
+          setTableData={setTableData}
+          variants={selectedCategory.variants}
+          primaryVariantId={selectedCategory.primaryVariant._id}
+          selectedOptions={selectedOptions}
+        />
+      )}
 
-        {/* Tags */}
-        <div>
-          <label className="block font-medium">Tags (comma separated)</label>
-          <input
-            type="text"
-            onChange={handleTagInput}
-            placeholder="e.g. new, summer, sale"
-            className="w-full p-2 border rounded"
-          />
-        </div>
-
-        {/* Featured */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={featured}
-            onChange={() => setFeatured(!featured)}
-          />
-          <label>Featured Product</label>
-        </div>
-
-        {/* Variants */}
-        <div>
-          <label className="block font-medium mb-2">Product Variants</label>
-          {variants.map((variant, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                placeholder="Size"
-                value={variant.size}
-                onChange={(e) =>
-                  setVariants(
-                    variants.map((v, i) =>
-                      i === index ? { ...v, size: e.target.value } : v
-                    )
-                  )
-                }
-                className="w-1/2 p-2 border rounded"
-              />
-              <input
-                placeholder="Color"
-                value={variant.color}
-                onChange={(e) =>
-                  setVariants(
-                    variants.map((v, i) =>
-                      i === index ? { ...v, color: e.target.value } : v
-                    )
-                  )
-                }
-                className="w-1/2 p-2 border rounded"
-              />
-              <button
-                type="button"
-                onClick={() => removeVariant(index)}
-                className="text-red-600"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addVariant}
-            className="text-sm text-blue-600 underline"
-          >
-            + Add Variant
-          </button>
-        </div>
-
-        {/* Submit */}
-        <div>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Create Product
-          </button>
-        </div>
-      </form>
+      <div className="pt-6">
+        <button
+          onClick={() => createProduct()}
+          className="w-full px-4 py-3 bg-black text-white cursor-pointer rounded-md hover:bg-gray-800 transition"
+        >
+          Save Product
+        </button>
+      </div>
     </div>
   );
 }

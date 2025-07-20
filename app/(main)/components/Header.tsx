@@ -16,7 +16,7 @@ export default async function Header() {
       <nav>
         <ul className="space-y-2 flex gap-2">
           {categories.map((category) => (
-            <li key={category}>
+            <li key={category._id}>
               <a
                 href="#"
                 className="text-gray-700 hover:text-blue-600 text-sm block"

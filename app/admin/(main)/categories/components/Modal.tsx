@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import apiClient from "@/utils/apiClient";
 import { useRouter } from "next/navigation";
-
+import { useEffect, useState } from "react";
+import VariantSelector from "./VariantSelector";
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
@@ -17,19 +18,40 @@ const categorySchema = z.object({
       }
     )
     .nullable(),
+  // variants: z
+  //   .array(z.string().min(1, "Each variant ID must be a string"))
+  //   .nonempty("At least one variant must be selected"),
+
+  // primaryVariant: z.string().min(1, "Primary variant is required"),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 };
 
 export default function CategoryModal({ isOpen, onClose }: Props) {
-  const router = useRouter();
-
   if (!isOpen) return null;
+
+  const router = useRouter();
+  const [variants, setVariants] = useState([]);
+  const [selectedVariants, setSelectedVariants] = useState([]);
+  const [primaryVariant, setPrimaryVariant] = useState<string | null>(null);
+
+  const getVariants = async () => {
+    try {
+      const response = await apiClient.get("/categoryVariants");
+      console.log(response.data);
+      setVariants(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    getVariants();
+  }, []);
   const {
     register,
     handleSubmit,
@@ -37,8 +59,10 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
   } = useForm({
     resolver: zodResolver(categorySchema),
   });
-
+  console.log(errors);
   const onSubmit = async (data: CategoryFormData) => {
+    console.log(data, primaryVariant, selectedVariants);
+
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -46,6 +70,8 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
       if (data.image && data.image.length > 0) {
         formData.append("image", data.image[0]); // data.image is FileList from react-hook-form
       }
+      formData.append("primaryVariant", primaryVariant);
+      selectedVariants.forEach((vari) => formData.append("variants", vari._id));
       await apiClient.post("/categories", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -88,6 +114,14 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
               required
             />
           </div>
+          {/* {renderVariantsSection()} */}
+          <VariantSelector
+            primaryVariant={primaryVariant}
+            setPrimaryVariant={setPrimaryVariant}
+            selectedVariants={selectedVariants}
+            setSelectedVariants={setSelectedVariants}
+            data={variants}
+          />
           <div>
             <label className="block text-sm font-medium mb-1">Image</label>
             <input

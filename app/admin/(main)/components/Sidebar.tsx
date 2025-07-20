@@ -9,6 +9,7 @@ const navItems = [
   { name: "Products", path: "/admin/products" },
   { name: "Orders", path: "/admin/orders" },
   { name: "Categories", path: "/admin/categories" },
+  { name: "Variants", path: "/admin/variants" },
 ];
 
 export default function Sidebar() {
@@ -34,14 +35,24 @@ export default function Sidebar() {
           ))}
         </nav>
       </div>
-      <button
-        onClick={() => {
-          logout();
-          router.push("/admin/login");
-        }}
-      >
-        Logout
-      </button>
+      <div className="flex flex-col gap-5">
+        <button
+          className="border border-gray-100 rounded-lg px-4 py-2 cursor-pointer"
+          onClick={() => {
+            router.push("/admin/products/create");
+          }}
+        >
+          Add New Product
+        </button>
+        <button
+          onClick={() => {
+            logout();
+            router.push("/admin/login");
+          }}
+        >
+          Logout
+        </button>
+      </div>
     </aside>
   );
 }

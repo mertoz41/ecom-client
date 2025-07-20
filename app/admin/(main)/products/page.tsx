@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import apiClient from "@/utils/apiClient";
+import Image from "next/image";
 type Product = {
   id: number;
   name: string;
@@ -16,9 +18,21 @@ const initialProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  useEffect(() => {
+    getProducts();
+  }, []);
+  const getProducts = async () => {
+    try {
+      const response = await apiClient.get("/products");
+      setProducts(response.data);
+      console.log(response.data);
+    } catch {
+      console.error("err");
+    }
+  };
   const toggleSelect = (id: number) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
@@ -83,14 +97,42 @@ export default function ProductsPage() {
                   onChange={toggleAll}
                 />
               </th>
+              <th className="p-3 text-left">Image</th>
               <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Category</th>
               <th className="p-3 text-left">Price</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3">Actions</th>
+              <th className="p-3 text-left">Stock</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+            {products.flatMap((product) =>
+              product?.variants.map((variant, i) => (
+                <tr key={variant._id}>
+                  <td className="p-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(product.id)}
+                      onChange={() => toggleSelect(product.id)}
+                    />
+                  </td>
+                  <td className="p-3">
+                    <Image
+                      src={`http://localhost:3001/uploads/${variant.images[0]}`}
+                      height={60}
+                      width={60}
+                      alt={product.name}
+                    />
+                    {/* {variant.images[0]} */}
+                  </td>
+                  <td className="p-3">{product.name}</td>
+                  <td className="p-3">{product.category.name}</td>
+
+                  <td className="p-3">${variant.price.toFixed(2)}</td>
+                  <td className="p-3">{variant.stock}</td>
+                </tr>
+              ))
+            )}
+            {/* {products.map((product) => (
               <tr
                 key={product.id}
                 className="border-b hover:bg-gray-50 transition"
@@ -130,7 +172,7 @@ export default function ProductsPage() {
                   </button>
                 </td>
               </tr>
-            ))}
+            ))} */}
             {products.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-6 text-gray-500">
