@@ -57,9 +57,7 @@ export default async function Header() {
   );
   return (
     <header className="border-b border-gray-200">
-      {/* Top Row */}
       {renderTopRow()}
-
       {renderBottomRow()}
     </header>
   );
