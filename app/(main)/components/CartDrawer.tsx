@@ -3,44 +3,41 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PiBag } from "react-icons/pi";
-
+import { useCartStore } from "@/app/store/cartStore";
 import Image from "next/image";
-
-const cartItems = [
-  {
-    id: 1,
-    name: "Corduroy Hoodie",
-    price: 110,
-    quantity: 1,
-    image: "/images/shirt2.jpg",
-  },
-  {
-    id: 2,
-    name: "Worker Wool Jacket",
-    price: 100,
-    quantity: 1,
-    image: "/images/shirt3.jpg",
-  },
-];
+import { useRouter } from "next/navigation";
+import { removeFromCart } from "@/utils/cartActions";
 
 export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
   const [isOpen, setIsOpen] = useState(false);
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
+  const cart = useCartStore((state) => state.cart);
+  const updateCart = useCartStore((state) => state.updateCart);
+  const router = useRouter()
+  const removeProduct = async (id: string) => {
+    const updatedCart = await removeFromCart(id);
+    updateCart(updatedCart);
+  };
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="relative cursor-pointer p-2 rounded "
+        className="relative cursor-pointer p-2 rounded"
       >
         <PiBag size={buttonSize} />
+
+        {cart?.items.length > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            {cart?.items.length}
+          </span>
+        )}
       </button>
 
       <Transition show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={setIsOpen}>
+        <Dialog
+          as="div"
+          className="relative z-50 text-black"
+          onClose={setIsOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-300"
@@ -77,22 +74,33 @@ export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                      {cartItems.map((item) => (
-                        <div key={item.id} className="flex gap-4 border-b pb-4">
+                      {cart?.items.map((item) => (
+                        <div
+                          key={item._id}
+                          className="flex gap-4 border-b pb-4"
+                        >
                           <Image
-                            src={item.image}
-                            alt={item.name}
+                            src={`http://localhost:3001/uploads/${item.variant.images[0]}`}
+                            alt={`product-${item.variant._id}`}
                             width={64}
                             height={64}
                             className="rounded border"
                           />
                           <div className="flex-1">
-                            <p className="font-medium">{item.name}</p>
+                            <p className="font-medium">
+                              {item.variant.product.name}
+                            </p>
                             <p className="text-sm text-gray-500">
                               Qty: {item.quantity}
                             </p>
                           </div>
-                          <p className="font-semibold">${item.price}</p>
+                          <button
+                            onClick={() => removeProduct(item.variant._id)}
+                            className="border cursor-pointer px-4 py-1 rounded-lg"
+                          >
+                            remove
+                          </button>
+                          <p className="font-semibold">${item.variant.price}</p>
                         </div>
                       ))}
                     </div>
@@ -101,11 +109,13 @@ export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
                       <div className="flex justify-between text-sm">
                         <span>Subtotal</span>
                         <span className="font-medium">
-                          ${subtotal.toFixed(2)}
+                          ${cart?.subTotal.toFixed(2)}
                         </span>
                       </div>
                       <button
+                        disabled={!cart?.items.length}
                         onClick={() => {
+                          router.push('/checkout')
                           setIsOpen(false);
                           // Navigate to checkout or perform action
                         }}

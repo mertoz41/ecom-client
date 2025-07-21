@@ -18,6 +18,7 @@ interface CartState {
   fetchCart: () => Promise<void>;
   addItem: (variantId: string, quantity?: number) => Promise<void>;
   removeItem: (variantId: string) => Promise<void>;
+  updateCart: (cart: { _id: string; items: CartItem[] }) => void; // <-- New action
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -28,7 +29,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     set({ loading: true });
     let cartId = getCartIdFromCookie();
     if (!cartId) {
-      const createRes = await apiClient.post("/cart/create");
+      const createRes = await apiClient.post("/cart");
       cartId = createRes.data.cartId;
       saveCartIdToCookie(cartId);
     }
@@ -47,4 +48,5 @@ export const useCartStore = create<CartState>((set, get) => ({
     const updatedCart = await removeFromCart(variantId);
     set({ cart: updatedCart, loading: false });
   },
+  updateCart: (cart) => set({ cart }), // <-- Directly updates cart
 }));

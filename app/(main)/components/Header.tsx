@@ -5,14 +5,6 @@ import Image from "next/image";
 import MobileHeader from "./MobileHeader";
 
 export default async function Header() {
-  // const categories = [
-  //   { _id: "cat1", name: "Electronics" },
-  //   { _id: "cat2", name: "Books" },
-  //   { _id: "cat3", name: "Clothing" },
-  //   { _id: "cat4", name: "Home & Garden" },
-  //   { _id: "cat5", name: "Sports & Outdoors" },
-  //   { _id: "cat6", name: "Toys & Games" },
-  // ];
   let categories = [];
   try {
     const response = await apiClient.get("/categories");
@@ -43,7 +35,7 @@ export default async function Header() {
         <div className="text-xl font-bold">
           <Link href={"/"}>
             <Image
-              src="/dark_gear.gif"
+              src="/pf-logo.jpeg"
               height={90}
               width={90}
               alt="logo"
@@ -68,7 +60,7 @@ export default async function Header() {
     </div>
   );
   return (
-    <header className="bg-white">
+    <header className="bg-white text-black">
       <div className="hidden md:block">{renderTopRow()}</div>
       <div className="block md:hidden">
         <MobileHeader categories={categories} />

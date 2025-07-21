@@ -1,6 +1,5 @@
 import apiClient from "./apiClient";
 import { getCartIdFromCookie } from "./cart";
-
 export const getCartItems = async () => {
   const cartId = getCartIdFromCookie();
   if (!cartId) return null;
@@ -24,7 +23,6 @@ export const addToCart = async (variantId: string, quantity = 1) => {
       variantId,
       quantity,
     });
-
     return res.data; // Optionally return updated cart
   } catch (error) {
     console.error("Failed to add to cart:", error);

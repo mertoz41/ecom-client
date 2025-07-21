@@ -7,10 +7,9 @@ import Rating from "../components/Rating";
 import apiClient from "@/utils/apiClient";
 import SizeSelection from "../components/SizeSelection";
 export default async function Page({ params }: { params: { id: string } }) {
+
   const { id } = params;
   const response = await apiClient.get(`/products/${id}`);
-  console.log(response.data);
-
   // need to populate colors from response.data.product.variants
   const filteredColors = response.data.product.variants
     .filter((vari: any) => vari._id !== id)
@@ -41,7 +40,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           />
           <ColorOptions colors={filteredColors} />
           <SizeSelection sizes={sameVariantSizes} />
-          <CartFavoriteButtons />
+          <CartFavoriteButtons variantId={response.data._id} />
           <Detail description={response.data.product.description} />
         </div>
       </div>
