@@ -3,7 +3,7 @@ import FiltersContainer from "./components/FiltersContainer";
 import SortButton from "./components/SortButton";
 import apiClient from "@/utils/apiClient";
 export default async function Home() {
-  // const response = await apiClient.get("/products");
+  const response = await apiClient.get("/products");
 
   return (
     <div className="w-full bg-white py-4">
@@ -18,7 +18,7 @@ export default async function Home() {
             <SortButton />
           </div>
 
-          <ProductsContainer />
+          <ProductsContainer products={response.data} />
         </div>
       </div>
     </div>

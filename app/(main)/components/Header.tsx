@@ -5,21 +5,21 @@ import Image from "next/image";
 import MobileHeader from "./MobileHeader";
 
 export default async function Header() {
-  const categories = [
-    { _id: "cat1", name: "Electronics" },
-    { _id: "cat2", name: "Books" },
-    { _id: "cat3", name: "Clothing" },
-    { _id: "cat4", name: "Home & Garden" },
-    { _id: "cat5", name: "Sports & Outdoors" },
-    { _id: "cat6", name: "Toys & Games" },
-  ];
-  // let categories = [];
-  // try {
-  //   const response = await apiClient.get("/categories");
-  //   categories = response.data;
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  // const categories = [
+  //   { _id: "cat1", name: "Electronics" },
+  //   { _id: "cat2", name: "Books" },
+  //   { _id: "cat3", name: "Clothing" },
+  //   { _id: "cat4", name: "Home & Garden" },
+  //   { _id: "cat5", name: "Sports & Outdoors" },
+  //   { _id: "cat6", name: "Toys & Games" },
+  // ];
+  let categories = [];
+  try {
+    const response = await apiClient.get("/categories");
+    categories = response.data;
+  } catch (err) {
+    console.error(err);
+  }
 
   const renderCategories = () => (
     <nav className=" self-center">
@@ -68,7 +68,7 @@ export default async function Header() {
     </div>
   );
   return (
-    <header>
+    <header className="bg-white">
       <div className="hidden md:block">{renderTopRow()}</div>
       <div className="block md:hidden">
         <MobileHeader categories={categories} />

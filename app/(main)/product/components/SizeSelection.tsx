@@ -1,4 +1,8 @@
-export default function SizeSelection() {
+export default function SizeSelection({
+  sizes,
+}: {
+  sizes: { size: string }[];
+}) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
@@ -10,28 +14,9 @@ export default function SizeSelection() {
           Size guide
         </a>
       </div>
-      <div className="grid grid-cols-5 gap-2">
-        {[
-          "UK 6.5",
-          "UK 7",
-          "UK 7.5",
-          "UK 8",
-          "UK 8.5",
-          "UK 9",
-          "UK 9.5",
-          "UK 10",
-          "UK 10.5",
-          "UK 11",
-          "UK 11.5",
-        ].map((size, i) => (
-          <button
-            key={i}
-            className={`py-2 border rounded text-sm ${
-              size === "UK 6.5"
-                ? "bg-black text-white"
-                : "border-gray-300 hover:border-black"
-            }`}
-          >
+      <div className="flex gap-4">
+        {sizes.map(({ size }, i) => (
+          <button className="border px-3 py-1 rounded-lg" key={i}>
             {size}
           </button>
         ))}
