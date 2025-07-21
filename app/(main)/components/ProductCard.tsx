@@ -12,14 +12,6 @@ export default function ProductCard({
   console.log("VARIANT", variant);
   return (
     <div className="max-w-[400px] rounded-lg overflow-hidden cursor-pointer shadow hover:shadow-md border border-gray-100">
-      {/* Badge */}
-      {/* <div className="p-2">
-        <span className="text-xs text-white bg-teal-400 px-2 py-0.5 rounded-md font-medium">
-          New Arrival
-        </span>
-      </div> */}
-
-      {/* Product Image */}
       <Image
         className="w-full object-cover aspect-[3/4]"
         src={`http://localhost:3001/uploads/${variant.images[0]}`}

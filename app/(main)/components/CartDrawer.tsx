@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { FaShoppingCart } from "react-icons/fa";
+import { PiBag } from "react-icons/pi";
 
 import Image from "next/image";
 
@@ -23,7 +23,7 @@ const cartItems = [
   },
 ];
 
-export default function CartDrawer() {
+export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -34,9 +34,9 @@ export default function CartDrawer() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="relative p-2 rounded bg-gray-200 hover:bg-gray-300"
+        className="relative cursor-pointer p-2 rounded "
       >
-        🛒 Cart
+        <PiBag size={buttonSize} />
       </button>
 
       <Transition show={isOpen} as={Fragment}>
@@ -50,7 +50,7 @@ export default function CartDrawer() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black/35" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-hidden">
@@ -72,7 +72,7 @@ export default function CartDrawer() {
                         onClick={() => setIsOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        <FaShoppingCart className="w-6 h-6" />
+                        <PiBag size={30} />
                       </button>
                     </div>
 

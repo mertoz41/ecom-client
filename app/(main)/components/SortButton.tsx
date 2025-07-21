@@ -6,7 +6,7 @@ export default function SortButton() {
     <Menu>
       <MenuButton
         className={
-          " self-end p-2 rounded-lg shadow-lg border border-gray-200 flex gap-4"
+          " self-end p-2 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-4"
         }
       >
         <CgSortAz className="self-center" size={30} />

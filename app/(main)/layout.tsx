@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <CartInit />
+      {/* <CartInit /> */}
       <main>{children}</main>
     </>
   );
