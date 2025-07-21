@@ -4,18 +4,18 @@ import Link from "next/link";
 import apiClient from "@/utils/apiClient";
 export default async function Header() {
   let categories = [];
-  try {
-    const response = await apiClient.get("/categories");
-    categories = response.data;
-  } catch {
-    console.error("error");
-  }
+  // try {
+  //   const response = await apiClient.get("/categories");
+  //   categories = response.data;
+  // } catch (err) {
+  //   console.error(err);
+  // }
   const renderBottomRow = () => (
     <div className="flex items-center justify-center border-b border-b-gray-300 py-3">
       {/* Categories */}
       <nav>
         <ul className="space-y-2 flex gap-2">
-          {categories.map((category) => (
+          {/* {categories.map((category) => (
             <li key={category._id}>
               <a
                 href="#"
@@ -24,7 +24,7 @@ export default async function Header() {
                 {category.name}
               </a>
             </li>
-          ))}
+          ))} */}
         </ul>
       </nav>
     </div>
