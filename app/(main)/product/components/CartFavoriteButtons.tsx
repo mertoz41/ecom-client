@@ -12,6 +12,7 @@ export default function CartFavoriteButtons({
     const newCart = await addToCart(id, 1);
     updateCart(newCart);
   };
+  console.log(cart)
   const foundItem = cart?.items.find((item) => item.variant._id === variantId);
   const cartAction = (id: string) => {
     if (foundItem) {
