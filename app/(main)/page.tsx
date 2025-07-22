@@ -6,7 +6,7 @@ export default async function Home() {
   const response = await apiClient.get("/products");
 
   return (
-    <div className="w-full bg-white py-4">
+    <div className="w-full bg-white h-screen overflow-auto py-4">
       <div className="grid px-4 grid-cols-1 md:grid-cols-5 gap-6">
         <div className=" flex  md:col-span-1">
           <aside className=" w-full sticky top-6 self-start">

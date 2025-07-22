@@ -12,7 +12,7 @@ export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const cart = useCartStore((state) => state.cart);
   const updateCart = useCartStore((state) => state.updateCart);
-  const router = useRouter()
+  const router = useRouter();
   const removeProduct = async (id: string) => {
     const updatedCart = await removeFromCart(id);
     updateCart(updatedCart);
@@ -115,7 +115,7 @@ export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
                       <button
                         disabled={!cart?.items.length}
                         onClick={() => {
-                          router.push('/checkout')
+                          router.push(`/checkout/${cart._id}`);
                           setIsOpen(false);
                           // Navigate to checkout or perform action
                         }}

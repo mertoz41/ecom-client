@@ -1,6 +1,7 @@
 "use client";
 import { addToCart, removeFromCart } from "@/utils/cartActions";
 import { useCartStore } from "@/app/store/cartStore";
+import { removeCartIdCookie } from "@/utils/cart";
 export default function CartFavoriteButtons({
   variantId,
 }: {
@@ -12,7 +13,6 @@ export default function CartFavoriteButtons({
     const newCart = await addToCart(id, 1);
     updateCart(newCart);
   };
-  console.log(cart)
   const foundItem = cart?.items.find((item) => item.variant._id === variantId);
   const cartAction = (id: string) => {
     if (foundItem) {

@@ -24,7 +24,7 @@ export default function FiltersContainer() {
     </div>
   );
   return (
-    <div className="bg-gray-100 p-3 text-[14px] flex flex-col gap-5 font-[600] rounded-lg">
+    <div className="bg-gray-100 text-black p-3 text-[14px] flex flex-col gap-5 font-[600] rounded-lg">
       <h1>Filters</h1>
       {renderFilterSection("Categories")}
       {renderFilterSection("Price")}

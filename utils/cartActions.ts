@@ -16,7 +16,6 @@ export const getCartItems = async () => {
 export const addToCart = async (variantId: string, quantity = 1) => {
   try {
     const cartId = getCartIdFromCookie();
-
     // Now send the add-to-cart request
     const res = await apiClient.post("/cart/add", {
       cartId,

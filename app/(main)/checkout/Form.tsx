@@ -1,9 +1,12 @@
 "use client";
+import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/app/store/cartStore";
 import apiClient from "@/utils/apiClient";
+import { removeCartIdCookie } from "@/utils/cart";
+import OrderSuccessModal from "./OrderSuccessModal";
 export const checkoutSchema = z.object({
   email: z.string().email("Invalid email"),
   firstName: z.string().min(1, "First name is required"),
@@ -18,6 +21,8 @@ export const checkoutSchema = z.object({
 type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 export default function Form() {
+  const [showModal, setShowModal] = useState(true);
+  const [newOrderId, setNewOrderId] = useState(null);
   const {
     register,
     handleSubmit,
@@ -40,146 +45,162 @@ export default function Form() {
         postalCode: data.zip,
         country: data.country,
       },
+      subTotal: cart.subTotal,
     };
-    console.log(objee)
     try {
       const response = await apiClient.post("/orders", objee);
+      removeCartIdCookie();
+      setNewOrderId(response.data.order._id);
       console.log(response);
     } catch {
       console.error("error");
     }
-    // console.log("Form submitted:", data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium">Email</label>
-        <input
-          type="email"
-          {...register("email")}
-          className="w-full border p-3 rounded mt-1"
+    <div>
+      {newOrderId && (
+        <OrderSuccessModal
+          orderId={newOrderId}
+          onClose={() => setShowModal(false)}
         />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
-      </div>
+      )}
 
-      {/* Shipping address */}
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <input
-              placeholder="First name"
-              {...register("firstName")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
-            )}
-          </div>
-          <div>
-            <input
-              placeholder="Last name"
-              {...register("lastName")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm">{errors.lastName.message}</p>
-            )}
-          </div>
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
+          <label className="block text-sm font-medium">Email</label>
           <input
-            placeholder="Phone number"
-            {...register("phone")}
-            className="border p-3 rounded w-full"
+            type="email"
+            {...register("email")}
+            className="w-full border p-3 rounded mt-1"
           />
-          {errors.phone && (
-            <p className="text-red-500 text-sm">{errors.phone.message}</p>
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
           )}
         </div>
-        <div>
-          <input
-            placeholder="Address"
-            {...register("address")}
-            className="border p-3 rounded w-full"
-          />
-          {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address.message}</p>
-          )}
+
+        {/* Shipping address */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <input
+                placeholder="First name"
+                {...register("firstName")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm">
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <input
+                placeholder="Last name"
+                {...register("lastName")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <div>
+            <input
+              placeholder="Phone number"
+              {...register("phone")}
+              className="border p-3 rounded w-full"
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+            )}
+          </div>
+          <div>
+            <input
+              placeholder="Address"
+              {...register("address")}
+              className="border p-3 rounded w-full"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm">{errors.address.message}</p>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <input
+                placeholder="City"
+                {...register("city")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.city && (
+                <p className="text-red-500 text-sm">{errors.city.message}</p>
+              )}
+            </div>
+            <div>
+              <input
+                placeholder="State"
+                {...register("state")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.state && (
+                <p className="text-red-500 text-sm">{errors.state.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <input
+                placeholder="Country"
+                {...register("country")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.country && (
+                <p className="text-red-500 text-sm">{errors.country.message}</p>
+              )}
+            </div>
+            <div>
+              <input
+                placeholder="ZIP code"
+                {...register("zip")}
+                className="border p-3 rounded w-full"
+              />
+              {errors.zip && (
+                <p className="text-red-500 text-sm">{errors.zip.message}</p>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <input
-              placeholder="City"
-              {...register("city")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.city && (
-              <p className="text-red-500 text-sm">{errors.city.message}</p>
-            )}
-          </div>
-          <div>
-            <input
-              placeholder="State"
-              {...register("state")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.state && (
-              <p className="text-red-500 text-sm">{errors.state.message}</p>
-            )}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <input
-              placeholder="Country"
-              {...register("country")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.country && (
-              <p className="text-red-500 text-sm">{errors.country.message}</p>
-            )}
-          </div>
-          <div>
-            <input
-              placeholder="ZIP code"
-              {...register("zip")}
-              className="border p-3 rounded w-full"
-            />
-            {errors.zip && (
-              <p className="text-red-500 text-sm">{errors.zip.message}</p>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <p className="font-medium">Shipping method</p>
         <div className="space-y-2">
-          <label className="flex items-center gap-3 border rounded p-3 cursor-pointer">
-            <input type="radio" />
-            <div>
-              <p className="font-semibold">Home delivery</p>
-              <p className="text-sm text-gray-500">Takes 3–5 business days</p>
-            </div>
-          </label>
+          <p className="font-medium">Shipping method</p>
+          <div className="space-y-2">
+            <label className="flex items-center gap-3 border rounded p-3 cursor-pointer">
+              <input type="radio" />
+              <div>
+                <p className="font-semibold">Home delivery</p>
+                <p className="text-sm text-gray-500">Takes 3–5 business days</p>
+              </div>
+            </label>
 
-          <label className="flex items-center gap-3 border rounded p-3 cursor-pointer">
-            <input type="radio" />
-            <div>
-              <p className="font-semibold">In-store pickup</p>
-              <p className="text-sm text-gray-500">Pick from store location</p>
-            </div>
-          </label>
+            <label className="flex items-center gap-3 border rounded p-3 cursor-pointer">
+              <input type="radio" />
+              <div>
+                <p className="font-semibold">In-store pickup</p>
+                <p className="text-sm text-gray-500">
+                  Pick from store location
+                </p>
+              </div>
+            </label>
+          </div>
         </div>
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-black text-white py-3 rounded mt-4 font-semibold"
-      >
-        Place Order
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="w-full bg-black text-white py-3 rounded mt-4 font-semibold"
+        >
+          Place Order
+        </button>
+      </form>
+    </div>
   );
 }

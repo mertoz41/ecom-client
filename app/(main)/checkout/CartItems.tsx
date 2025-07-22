@@ -1,38 +1,9 @@
+"use client";
 import Image from "next/image";
 import { useCartStore } from "@/app/store/cartStore";
-const cartItems = [
-  {
-    id: 1,
-    name: "The Quilted Pop-Over In Multiple Color",
-    price: 240,
-    quantity: 2,
-    size: "XL",
-    image: "/images/shirt1.jpg",
-  },
-  {
-    id: 2,
-    name: "The Corduroy Hoodie",
-    price: 110,
-    quantity: 1,
-    size: "XL",
-    image: "/images/shirt2.jpg",
-  },
-  {
-    id: 3,
-    name: "The Worker Wool Jacket in Light Grey",
-    price: 100,
-    quantity: 1,
-    size: "XL",
-    image: "/images/shirt3.jpg",
-  },
-];
+
 export default function CartItems() {
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
   const cart = useCartStore((state) => state.cart);
-  console.log(cart);
   return (
     <div className="bg-gray-50 p-8 space-y-6">
       {cart?.items?.map((item) => (
