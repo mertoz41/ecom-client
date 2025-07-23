@@ -15,8 +15,7 @@ export default async function Page() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Categories</h1>
       </div>
-
-      <CategoryTable categories={categories} />
+      {categories.length ? <CategoryTable categories={categories} /> : null}
     </div>
   );
 }
