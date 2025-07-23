@@ -109,7 +109,6 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
               required
             />
           </div>
-          {/* {renderVariantsSection()} */}
           <VariantSelector
             primaryVariant={primaryVariant}
             setPrimaryVariant={setPrimaryVariant}

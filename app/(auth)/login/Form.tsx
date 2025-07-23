@@ -5,6 +5,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/authStore";
+import { useState } from "react";
+import { useToastStore } from "@/app/store/toastStore";
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
@@ -16,6 +18,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Form() {
   const { login } = useAuthStore();
+  const [loginError, setLoginError] = useState("");
+  const addToast = useToastStore((state) => state.addToast)
   const router = useRouter();
   const {
     register,
@@ -25,11 +29,16 @@ export default function Form() {
     resolver: zodResolver(loginSchema),
   });
   const onSubmit = async (data: LoginFormData) => {
-    const loggedInUser = await login(data.email, data.password);
-    if (loggedInUser.role === "customer") {
-      router.push("/");
-    } else {
-      router.push("/admin/dashboard");
+    try {
+      const loggedInUser = await login(data.email, data.password);
+
+      if (loggedInUser.role === "customer") {
+        router.push("/");
+      } else {
+        router.push("/admin/dashboard");
+      }
+    } catch (err) {
+      setLoginError(err.response.data.message);
     }
   };
   return (
@@ -80,6 +89,11 @@ export default function Form() {
       >
         Sign in
       </button>
+      {loginError.length ? (
+        <div>
+          <h1 className="text-center text-red-500">{loginError}</h1>
+        </div>
+      ) : null}
     </form>
   );
 }

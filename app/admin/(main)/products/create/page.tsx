@@ -5,6 +5,7 @@ import apiClient from "@/utils/apiClient";
 import VariantOptionSelector from "./VariantOptionSelector";
 import VariantTable from "./VariantTable";
 import { useToastStore } from "@/app/store/toastStore";
+import { useRouter } from "next/navigation";
 export default function ProductEditor() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -13,7 +14,7 @@ export default function ProductEditor() {
   const [description, setDescription] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const addToast = useToastStore((s) => s.addToast);
-
+  const router = useRouter();
   useEffect(() => {
     getCategories();
   }, []);
@@ -75,6 +76,7 @@ export default function ProductEditor() {
           "Content-Type": "multipart/form-data",
         },
       });
+      router.push("/admin/products");
       addToast({ message: "Product created!", type: "success" });
     } catch {
       addToast({ message: "Something went wrong", type: "error" });

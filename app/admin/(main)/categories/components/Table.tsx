@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import ModalButton from "./ModalButton";
+import { useToastStore } from "@/app/store/toastStore";
 import apiClient from "@/utils/apiClient";
 import { useRouter } from "next/navigation";
 type Category = {
@@ -17,6 +18,7 @@ type Props = {
 };
 export default function CategoryTable({ categories }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const addToast = useToastStore((state) => state.addToast);
   const router = useRouter();
   const handleSelectOrder = (id: string) => {
     setSelectedCategories((prev) =>
@@ -45,18 +47,22 @@ export default function CategoryTable({ categories }: Props) {
         },
       });
       setSelectedCategories([]);
+      addToast({ message: "Categories deleted", type: "success" });
+
       router.refresh();
     } catch {
-      console.error("ee");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
 
   const deleteCategory = async (id: string) => {
     try {
       await apiClient.delete(`/categories/${id}`);
+      addToast({ message: "Category deleted", type: "success" });
+
       router.refresh();
     } catch {
-      console.error("ee");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   return (

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import apiClient from "@/utils/apiClient";
 import { useToastStore } from "@/app/store/toastStore";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -25,16 +26,18 @@ export default function Form() {
     resolver: zodResolver(registerSchema),
   });
   const addToast = useToastStore((s) => s.addToast);
-
+  const router = useRouter();
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const res = await apiClient.post("/auth/register", {
         ...data,
         role: "customer",
       });
+      console.log(res.data);
       addToast({ message: "Account created!", type: "success" });
+      router.push("/login");
     } catch (err) {
-      addToast({ message: "Something went wrong", type: "error" });
+      addToast({ message: err.response.data.message, type: "error" });
     }
     // TODO: Handle registration API call
   };

@@ -41,6 +41,8 @@ export default function VariantSelector({
   return (
     <div className="space-y-6">
       {/* Variant groups as checkboxes */}
+
+      <h1>Apply variants to category</h1>
       <div className="space-y-4">
         {data.map((variant, i) => (
           <div key={i}>

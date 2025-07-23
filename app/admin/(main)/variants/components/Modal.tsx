@@ -35,6 +35,7 @@ export default function VariantModal({ isOpen, onClose }: Props) {
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm({
     resolver: zodResolver(variantSchema),
     defaultValues: {
@@ -48,7 +49,7 @@ export default function VariantModal({ isOpen, onClose }: Props) {
       await apiClient.post("/categoryVariants", data);
       onClose();
       addToast({ message: "Variant created!", type: "success" });
-
+      reset();
       router.refresh();
     } catch {
       addToast({ message: "Something went wrong", type: "error" });
@@ -111,17 +112,18 @@ export default function VariantModal({ isOpen, onClose }: Props) {
               type="text"
               value={optionInput}
               onChange={(e) => setOptionInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addOption();
-                }
-              }}
+              // onKeyDown={(e) => {
+              //   if (e.key === "Enter") {
+              //     e.preventDefault();
+              //     addOption();
+              //   }
+              // }}
               placeholder="Enter option and press Enter"
               className="border rounded px-3 py-2 flex-grow"
             />
             <button
               onClick={addOption}
+              type="button"
               className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700"
             >
               Add

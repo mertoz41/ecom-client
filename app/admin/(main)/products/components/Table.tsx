@@ -3,8 +3,10 @@ import apiClient from "@/utils/apiClient";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToastStore } from "@/app/store/toastStore";
 export default function Table({ products }: { products: any[] }) {
   const [selectedVariants, setSelectedVariants] = useState<string[]>([]);
+  const addToast = useToastStore((state) => state.addToast);
   const router = useRouter();
   const handleSelectOrder = (id: string) => {
     setSelectedVariants((prev) =>
@@ -29,9 +31,10 @@ export default function Table({ products }: { products: any[] }) {
   const deleteVariant = async (id: string) => {
     try {
       await apiClient.delete(`/products/${id}`);
+      addToast({ message: "Product variant deleted", type: "success" });
       router.refresh();
     } catch {
-      console.error("err");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   const deleteSelectedVariants = async () => {
@@ -41,9 +44,14 @@ export default function Table({ products }: { products: any[] }) {
           ids: selectedVariants,
         },
       });
+      addToast({
+        message: "Selected product variants deleted",
+        type: "success",
+      });
+
       router.refresh();
     } catch {
-      console.error("err");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   return (

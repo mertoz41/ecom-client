@@ -1,8 +1,9 @@
 import apiClient from "@/utils/apiClient";
 export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+  const { id } = await params;
   const response = await apiClient.get(`/orders/${id}`);
   const order = response.data;
+  console.log(order);
   return (
     <div className="min-h-screen text-black bg-gray-100 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-xl rounded-2xl max-w-2xl w-full p-8">
@@ -35,7 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <ul className="text-sm text-gray-700 list-disc pl-5">
               {order.items.map((item) => (
                 <li key={item._id}>
-                  Variant ID: <span className="font-mono">{item.variant}</span>{" "}
+                  Variant ID: <span className="font-mono">{item.variant._id}</span>{" "}
                   — Qty: {item.quantity}
                 </li>
               ))}
