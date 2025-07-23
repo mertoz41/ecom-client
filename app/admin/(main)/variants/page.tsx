@@ -1,12 +1,13 @@
+export const dynamic = "force-dynamic";
+
 import apiClient from "@/utils/apiClient";
 import ModalButton from "./components/ModalButton";
-// import Table from "../components/Table";
 import { cookies } from "next/headers";
 import Table from "./components/Table";
 export default async function Page() {
   let variants: [];
+  const allCookies = await cookies();
   try {
-    const allCookies = await cookies();
     const token = allCookies.get("token")?.value;
     const response = await apiClient.get("/categoryVariants", {
       headers: {
@@ -25,7 +26,6 @@ export default async function Page() {
         <ModalButton />
       </div>
       <Table variants={variants} />
-     
 
       {/* <CategoryTable categories={categories} /> */}
     </div>
