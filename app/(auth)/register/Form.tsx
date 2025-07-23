@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import apiClient from "@/utils/apiClient";
+import { useToastStore } from "@/app/store/toastStore";
 
 const registerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -23,14 +24,17 @@ export default function Form() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
+  const addToast = useToastStore((s) => s.addToast);
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log("Register data:", data);
     try {
-      const res = await apiClient.post("/auth/register", {...data, role: 'customer'});
-      console.log(res);
+      const res = await apiClient.post("/auth/register", {
+        ...data,
+        role: "customer",
+      });
+      addToast({ message: "Account created!", type: "success" });
     } catch (err) {
-      console.error(err);
+      addToast({ message: "Something went wrong", type: "error" });
     }
     // TODO: Handle registration API call
   };
@@ -96,7 +100,9 @@ export default function Form() {
           className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
         />
         {errors.phoneNumber && (
-          <p className="text-sm text-red-600 mt-1">{errors.phoneNumber.message}</p>
+          <p className="text-sm text-red-600 mt-1">
+            {errors.phoneNumber.message}
+          </p>
         )}
       </div>
 

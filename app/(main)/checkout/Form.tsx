@@ -7,6 +7,8 @@ import { useCartStore } from "@/app/store/cartStore";
 import apiClient from "@/utils/apiClient";
 import { removeCartIdCookie } from "@/utils/cart";
 import OrderSuccessModal from "./OrderSuccessModal";
+import { useToastStore } from "@/app/store/toastStore";
+
 import { useAuthStore } from "@/app/store/authStore";
 export const checkoutSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -24,6 +26,8 @@ type CheckoutForm = z.infer<typeof checkoutSchema>;
 export default function Form() {
   const [showModal, setShowModal] = useState(true);
   const [newOrderId, setNewOrderId] = useState(null);
+  const addToast = useToastStore((s) => s.addToast);
+
   const user = useAuthStore((state) => state.user);
   const {
     register,
@@ -39,7 +43,6 @@ export default function Form() {
     },
   });
   const cart = useCartStore((state) => state.cart);
-  // console.log(user);
   const onSubmit = async (data: CheckoutForm) => {
     const objee = {
       cartId: cart._id,
@@ -54,15 +57,13 @@ export default function Form() {
       subTotal: cart.subTotal,
       ...(user && { userId: user._id }),
     };
-    console.log(cart)
-    console.log(objee);
+
     try {
       const response = await apiClient.post("/orders", objee);
       removeCartIdCookie();
       setNewOrderId(response.data.order._id);
-      console.log(response);
     } catch {
-      console.error("error");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
 

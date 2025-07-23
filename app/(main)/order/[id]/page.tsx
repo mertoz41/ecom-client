@@ -37,9 +37,8 @@ const OrderSuccessPage: React.FC<OrderSuccessPageProps> = async ({
     let order;
     try{
         const response = await apiClient(`/orders/${id}`)
-        console.log(response.data)
     } catch {
-        console.error('ye')
+        console.error('error')
     }
   return (
     <div className="max-w-3xl mx-auto p-6">

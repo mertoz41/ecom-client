@@ -7,6 +7,7 @@ import apiClient from "@/utils/apiClient";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import VariantSelector from "./VariantSelector";
+import { useToastStore } from "@/app/store/toastStore";
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
@@ -29,6 +30,8 @@ type Props = {
 
 export default function CategoryModal({ isOpen, onClose }: Props) {
   const router = useRouter();
+  const addToast = useToastStore((s) => s.addToast);
+
   const [variants, setVariants] = useState([]);
   const [selectedVariants, setSelectedVariants] = useState([]);
   const [primaryVariant, setPrimaryVariant] = useState<string | null>(null);
@@ -36,10 +39,9 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
   const getVariants = async () => {
     try {
       const response = await apiClient.get("/categoryVariants");
-      console.log(response.data);
       setVariants(response.data);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   useEffect(() => {
@@ -52,10 +54,7 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
   } = useForm({
     resolver: zodResolver(categorySchema),
   });
-  console.log(errors);
   const onSubmit = async (data: CategoryFormData) => {
-    console.log(data, primaryVariant, selectedVariants);
-
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -70,10 +69,12 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
           "Content-Type": "multipart/form-data",
         },
       });
+      addToast({ message: "Category created!", type: "success" });
+
       onClose();
       router.refresh();
     } catch {
-      console.log("error");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   if (!isOpen) return null;

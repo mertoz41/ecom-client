@@ -118,7 +118,6 @@ const VariantTable: React.FC<Props> = ({
   };
 
   const handleImageChange = (primaryIndex: number, value: File) => {
-    console.log(value)
     setTableData((prev) => {
       const updated = [...prev];
       updated[primaryIndex] = {

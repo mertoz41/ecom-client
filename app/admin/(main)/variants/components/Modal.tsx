@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import apiClient from "@/utils/apiClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToastStore } from "@/app/store/toastStore";
 
 const variantSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -26,6 +27,7 @@ type Props = {
 
 export default function VariantModal({ isOpen, onClose }: Props) {
   const router = useRouter();
+  const addToast = useToastStore((s) => s.addToast);
 
   const {
     register,
@@ -43,20 +45,20 @@ export default function VariantModal({ isOpen, onClose }: Props) {
 
   const onSubmit = async (data: VariantFormData) => {
     try {
-      const response = await apiClient.post("/categoryVariants", data);
+      await apiClient.post("/categoryVariants", data);
       onClose();
+      addToast({ message: "Variant created!", type: "success" });
+
       router.refresh();
     } catch {
-      console.log("error");
+      addToast({ message: "Something went wrong", type: "error" });
     }
   };
   const [optionInput, setOptionInput] = useState("");
-  //   const [options, setOptions] = useState<string[]>([]);
   const options = watch("options");
 
   const addOption = () => {
     const trimmed = optionInput.trim();
-    console.log(trimmed);
     if (trimmed && !options?.includes(trimmed)) {
       setValue("options", [...options, trimmed], { shouldValidate: true });
       setOptionInput("");

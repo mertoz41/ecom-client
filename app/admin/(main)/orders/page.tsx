@@ -15,16 +15,12 @@ export default async function Page() {
   } catch {
     console.error("e");
   }
-  console.log(orders);
   return (
     <div>
       <div className="overflow-x-auto p-4">
         <div className="flex justify-between">
-
-        <h1 className="text-[24px] font-bold p-5">Orders</h1>
-        <button>
-          
-        </button>
+          <h1 className="text-[24px] font-bold p-5">Orders</h1>
+          <button></button>
         </div>
         <Table orders={orders} />
       </div>

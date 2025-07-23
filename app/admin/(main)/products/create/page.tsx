@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import apiClient from "@/utils/apiClient";
 import VariantOptionSelector from "./VariantOptionSelector";
 import VariantTable from "./VariantTable";
+import { useToastStore } from "@/app/store/toastStore";
 export default function ProductEditor() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -12,7 +12,8 @@ export default function ProductEditor() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
-  console.log(selectedCategory);
+  const addToast = useToastStore((s) => s.addToast);
+
   useEffect(() => {
     getCategories();
   }, []);
@@ -32,9 +33,7 @@ export default function ProductEditor() {
       setSelectedCategory(selected);
     }
   };
-  console.log(tableData);
   const createProduct = async () => {
-    console.log(name, description, tableData);
     // const primaryVariantName = selectedCategory.primaryVariant.name;
     const formData = new FormData();
     formData.append("name", name);
@@ -70,54 +69,16 @@ export default function ProductEditor() {
         formData.append(`variants[${pIndex}][images][${imgIndex}]`, file);
       });
     });
-
-    // formData.append("name", name);
-    // formData.append("description", description);
-    // formData.append("selectedCategoryId", selectedCategory._id);
-
-    // // variants is your tableData state array
-    // tableData.forEach((primaryItem, pIndex) => {
-    //   // Append primary variant name and primary variant value (the selected option)
-    //   // Assuming you have primaryVariantName available in scope
-    //   formData.append(
-    //     `variants[${pIndex}][primaryVariantName]`,
-    //     primaryVariantName
-    //   );
-    //   formData.append(
-    //     `variants[${pIndex}][primaryVariantValue]`,
-    //     primaryItem.value
-    //   );
-
-    //   primaryItem.variants.forEach((variant, vIndex) => {
-    //     // Append price, stock, and all variant option fields except image
-    //     Object.entries(variant).forEach(([key, value]) => {
-    //       if (key !== "image") {
-    //         formData.append(
-    //           `variants[${pIndex}][${vIndex}][${key}]`,
-    //           String(value)
-    //         );
-    //       }
-    //     });
-    //   });
-
-    //   // Append images separately (images is array of File)
-    //   Array.from(primaryItem.images).forEach((file, i) => {
-    //     formData.append(`variants[${pIndex}][images][${i}]`, file);
-    //   });
-    // });
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        console.log(key, value.name, value.size, value.type);
-      } else {
-        console.log(key, value);
-      }
+    try {
+      const response = await apiClient.post("/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      addToast({ message: "Product created!", type: "success" });
+    } catch {
+      addToast({ message: "Something went wrong", type: "error" });
     }
-    const response = await apiClient.post("/products", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    console.log(response);
   };
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">

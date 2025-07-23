@@ -29,7 +29,6 @@ export default function VariantSelector({
 }: Props) {
   const toggleVariant = (variant: string) => {
     const exists = selectedVariants.some((v) => v.name === variant.name);
-    console.log(exists);
     if (exists) {
       setSelectedVariants((prev) =>
         prev.filter((v) => !(v.name === variant.name))

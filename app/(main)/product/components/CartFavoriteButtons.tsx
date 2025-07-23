@@ -1,7 +1,7 @@
 "use client";
 import { addToCart, removeFromCart } from "@/utils/cartActions";
 import { useCartStore } from "@/app/store/cartStore";
-import { removeCartIdCookie } from "@/utils/cart";
+import { useToastStore } from "@/app/store/toastStore";
 export default function CartFavoriteButtons({
   variantId,
 }: {
@@ -9,6 +9,8 @@ export default function CartFavoriteButtons({
 }) {
   const updateCart = useCartStore((state) => state.updateCart);
   const cart = useCartStore((state) => state.cart);
+  const addToast = useToastStore((s) => s.addToast);
+
   const addVariantToCart = async (id: string) => {
     const newCart = await addToCart(id, 1);
     updateCart(newCart);
@@ -17,8 +19,10 @@ export default function CartFavoriteButtons({
   const cartAction = (id: string) => {
     if (foundItem) {
       removeVariantFromCart(id);
+      addToast({ message: "Item removed from cart", type: "success" });
     } else {
       addVariantToCart(id);
+      addToast({ message: "Item added to cart!", type: "success" });
     }
   };
   const removeVariantFromCart = async (id: string) => {

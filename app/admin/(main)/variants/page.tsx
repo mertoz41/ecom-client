@@ -14,7 +14,6 @@ export default async function Page() {
       },
     });
     variants = response.data;
-    console.log(variants);
   } catch (error) {
     console.error(error);
   }

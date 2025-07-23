@@ -15,8 +15,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Form() {
-  const { login, loading } = useAuthStore();
-  const user = useAuthStore((state) => state.user);
+  const { login } = useAuthStore();
   const router = useRouter();
   const {
     register,
@@ -32,7 +31,6 @@ export default function Form() {
     } else {
       router.push("/admin/dashboard");
     }
-    console.log(loggedInUser);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

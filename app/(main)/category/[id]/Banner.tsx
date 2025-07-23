@@ -8,7 +8,6 @@ export default function Banner({
 }) {
   return (
     <div className="relative w-full mb-10 h-[250px]">
-      {/* Background Image */}
       <Image
         src={`http://localhost:3001/uploads/categories/${bgImg}`}
         alt={title}
