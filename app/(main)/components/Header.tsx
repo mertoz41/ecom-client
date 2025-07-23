@@ -16,7 +16,6 @@ export default async function Header() {
   }
   const allCookies = await cookies();
   const token = allCookies.get("customer_token")?.value;
-
   const renderCategories = () => (
     <nav className=" self-center">
       <ul className="flex gap-5">
