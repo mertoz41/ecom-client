@@ -8,7 +8,7 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500">Login to your admin account</p>
         </div>
 
-        <Form />
+        <Form  />
       </div>
     </div>
   );

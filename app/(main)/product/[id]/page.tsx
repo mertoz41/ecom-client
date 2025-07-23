@@ -7,8 +7,7 @@ import Rating from "../components/Rating";
 import apiClient from "@/utils/apiClient";
 import SizeSelection from "../components/SizeSelection";
 export default async function Page({ params }: { params: { id: string } }) {
-
-  const { id } = params;
+  const { id } = await params;
   const response = await apiClient.get(`/products/${id}`);
   // need to populate colors from response.data.product.variants
   const filteredColors = response.data.product.variants

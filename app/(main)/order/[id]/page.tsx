@@ -33,7 +33,7 @@ const OrderSuccessPage: React.FC<OrderSuccessPageProps> = async ({
 }: {
   params: { id: string };
 }) => {
-    const {id} = params
+    const {id} = await params
     let order;
     try{
         const response = await apiClient(`/orders/${id}`)

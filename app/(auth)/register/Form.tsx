@@ -3,12 +3,13 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import apiClient from "@/utils/apiClient";
 
 const registerSchema = z.object({
-  firstname: z.string().min(1, "First name is required"),
-  lastname: z.string().min(1, "Last name is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email"),
-  phone: z.string().regex(/^\+?\d{10,15}$/, "Invalid phone number"),
+  phoneNumber: z.string().regex(/^\+?\d{10,15}$/, "Invalid phone number"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -23,8 +24,14 @@ export default function Form() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     console.log("Register data:", data);
+    try {
+      const res = await apiClient.post("/auth/register", {...data, role: 'customer'});
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
     // TODO: Handle registration API call
   };
 
@@ -37,12 +44,12 @@ export default function Form() {
           </label>
           <input
             type="text"
-            {...register("firstname")}
+            {...register("firstName")}
             className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
           />
-          {errors.firstname && (
+          {errors.firstName && (
             <p className="text-sm text-red-600 mt-1">
-              {errors.firstname.message}
+              {errors.firstName.message}
             </p>
           )}
         </div>
@@ -53,12 +60,12 @@ export default function Form() {
           </label>
           <input
             type="text"
-            {...register("lastname")}
+            {...register("lastName")}
             className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
           />
-          {errors.lastname && (
+          {errors.lastName && (
             <p className="text-sm text-red-600 mt-1">
-              {errors.lastname.message}
+              {errors.lastName.message}
             </p>
           )}
         </div>
@@ -84,12 +91,12 @@ export default function Form() {
         </label>
         <input
           type="tel"
-          {...register("phone")}
+          {...register("phoneNumber")}
           placeholder="+1234567890"
           className="w-full mt-1 p-3 border border-gray-300 rounded-lg"
         />
-        {errors.phone && (
-          <p className="text-sm text-red-600 mt-1">{errors.phone.message}</p>
+        {errors.phoneNumber && (
+          <p className="text-sm text-red-600 mt-1">{errors.phoneNumber.message}</p>
         )}
       </div>
 

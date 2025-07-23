@@ -13,9 +13,9 @@ interface AuthState {
   user: User | null;
   loading: boolean;
   setUser: (user: User | null) => void;
-  checkAuth: () => Promise<void>;
+  checkAuth: (url?: string) => Promise<void>;
   login: (email: string, password: string) => Promise<User>;
-  logout: () => Promise<void>;
+  logout: (token: string, url?: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -24,11 +24,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setUser: (user) => set({ user }),
 
-  checkAuth: async () => {
+  checkAuth: async (url?: string) => {
     set({ loading: true });
     try {
-      const res = await apiClient.get("/auth/me");
-      set({ user: res.data, loading: false });
+      const res = await apiClient.get(`/auth/me${url ? `/${url}` : ""}`);
+      set({ user: res.data.user, loading: false });
     } catch {
       set({ user: null, loading: false });
     }
@@ -38,8 +38,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const res = await apiClient.post("/auth/login", { email, password });
-
-      set({ user: res.data, loading: false });
+      set({ user: res.data.user, loading: false });
+      console.log(res);
       return res.data.user;
     } catch (error) {
       set({ user: null, loading: false });
@@ -47,10 +47,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  logout: async () => {
+  logout: async (url?: string) => {
     set({ loading: true });
     try {
-      await apiClient.post("/auth/logout");
+      await apiClient.post(`/auth/logout${url ? `/${url}` : ""}`);
       set({ user: null, loading: false });
     } catch {
       set({ loading: false });

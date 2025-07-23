@@ -10,7 +10,6 @@ type Props = {
   categories: Category[];
 };
 export default function CategoryTable({ categories }: Props) {
-  console.log(categories[2].primaryVariant);
   return (
     <div className="overflow-x-auto border rounded-lg shadow">
       <table className="min-w-full text-sm text-left">

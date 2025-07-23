@@ -1,9 +1,15 @@
+import { cookies } from "next/headers";
 import apiClient from "@/utils/apiClient";
 export default async function Page() {
   let orders;
   try {
-    const response = await apiClient.get("/orders");
-    console.log(response.data);
+    const allCookies = await cookies();
+    const token = allCookies.get("token")?.value;
+    const response = await apiClient.get("/orders", {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
     orders = response.data;
   } catch {
     console.error("e");

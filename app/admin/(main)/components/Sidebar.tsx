@@ -10,6 +10,8 @@ const navItems = [
   { name: "Orders", path: "/admin/orders" },
   { name: "Categories", path: "/admin/categories" },
   { name: "Variants", path: "/admin/variants" },
+  { name: "Users", path: "/admin/users" },
+
 ];
 
 export default function Sidebar() {

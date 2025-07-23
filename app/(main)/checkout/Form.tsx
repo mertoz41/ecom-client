@@ -7,6 +7,7 @@ import { useCartStore } from "@/app/store/cartStore";
 import apiClient from "@/utils/apiClient";
 import { removeCartIdCookie } from "@/utils/cart";
 import OrderSuccessModal from "./OrderSuccessModal";
+import { useAuthStore } from "@/app/store/authStore";
 export const checkoutSchema = z.object({
   email: z.string().email("Invalid email"),
   firstName: z.string().min(1, "First name is required"),
@@ -23,6 +24,7 @@ type CheckoutForm = z.infer<typeof checkoutSchema>;
 export default function Form() {
   const [showModal, setShowModal] = useState(true);
   const [newOrderId, setNewOrderId] = useState(null);
+  const user = useAuthStore((state) => state.user);
   const {
     register,
     handleSubmit,
@@ -30,10 +32,14 @@ export default function Form() {
   } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      email: "josim.design@gmail.com",
+      email: user?.email || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      phone: user?.phoneNumber || "",
     },
   });
   const cart = useCartStore((state) => state.cart);
+  // console.log(user);
   const onSubmit = async (data: CheckoutForm) => {
     const objee = {
       cartId: cart._id,
@@ -46,7 +52,10 @@ export default function Form() {
         country: data.country,
       },
       subTotal: cart.subTotal,
+      ...(user && { userId: user._id }),
     };
+    console.log(cart)
+    console.log(objee);
     try {
       const response = await apiClient.post("/orders", objee);
       removeCartIdCookie();

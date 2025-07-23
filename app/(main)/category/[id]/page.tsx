@@ -4,7 +4,7 @@ import FiltersContainer from "../../components/FiltersContainer";
 import SortButton from "../../components/SortButton";
 import Banner from "./Banner";
 export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+  const { id } = await params;
   const response = await apiClient.get(`/categories/${id}/products`);
   return (
     <div className="w-full text-black overflow-auto h-screen bg-white py-4">

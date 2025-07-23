@@ -1,7 +1,9 @@
 import React from "react";
 import Header from "./components/Header";
 import CartInit from "./components/CartInit";
-export default function MainLayout({
+import AuthInit from "./components/AuthInit";
+
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -10,6 +12,7 @@ export default function MainLayout({
     <>
       <Header />
       <CartInit />
+      <AuthInit />
       <main>{children}</main>
     </>
   );

@@ -27,7 +27,12 @@ export default function Form() {
   });
   const onSubmit = async (data: LoginFormData) => {
     const loggedInUser = await login(data.email, data.password);
-    router.push(loggedInUser?.role === "admin" ? "/admin/dashboard" : "");
+    if (loggedInUser.role === "customer") {
+      router.push("/");
+    } else {
+      router.push("/admin/dashboard");
+    }
+    console.log(loggedInUser);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

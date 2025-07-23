@@ -6,7 +6,6 @@ import type { NextRequest } from "next/server";
 const PUBLIC_PATHS = ["/login", "/admin/login", "/register", "/"];
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
   const url = request.nextUrl;
 
   const isPublic = PUBLIC_PATHS.includes(url.pathname);
@@ -14,16 +13,19 @@ export function middleware(request: NextRequest) {
   // ✅ Allow public routes freely
   if (isPublic) return NextResponse.next();
 
+  // ✅ Check for admin-only access
+  const adminToken = request.cookies.get("token")?.value; // admin token
+  const customerToken = request.cookies.get("customer_token")?.value;
+  const isAdminRoute = url.pathname.startsWith("/admin");
+  const token = isAdminRoute ? adminToken : customerToken;
   if (url.pathname.startsWith("/admin") && !token) {
     url.pathname = "/admin/login";
     return NextResponse.redirect(url);
   }
-  // ✅ Block all private routes if no token
-  if (!token) return NextResponse.redirect(new URL("/login", url));
-
-  // ✅ Check for admin-only access
-  const isAdminRoute = url.pathname.startsWith("/admin");
-
+  if (!token) {
+    const redirectPath = isAdminRoute ? "/admin/login" : "/login";
+    return NextResponse.redirect(new URL(redirectPath, request.url));
+  }
   // For now, decode JWT manually (can be improved with a utility)
   const payload = token.split(".")[1];
   const decoded = JSON.parse(atob(payload)); // contains { userId, role }

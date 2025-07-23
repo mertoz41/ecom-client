@@ -18,11 +18,6 @@ const categorySchema = z.object({
       }
     )
     .nullable(),
-  // variants: z
-  //   .array(z.string().min(1, "Each variant ID must be a string"))
-  //   .nonempty("At least one variant must be selected"),
-
-  // primaryVariant: z.string().min(1, "Primary variant is required"),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -33,8 +28,6 @@ type Props = {
 };
 
 export default function CategoryModal({ isOpen, onClose }: Props) {
-  if (!isOpen) return null;
-
   const router = useRouter();
   const [variants, setVariants] = useState([]);
   const [selectedVariants, setSelectedVariants] = useState([]);
@@ -83,6 +76,7 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
       console.log("error");
     }
   };
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50">

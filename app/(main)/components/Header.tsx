@@ -2,7 +2,9 @@ import CartDrawer from "./CartDrawer";
 import Link from "next/link";
 import apiClient from "@/utils/apiClient";
 import Image from "next/image";
+import LoginButton from "./LoginButton";
 import MobileHeader from "./MobileHeader";
+import { cookies } from "next/headers";
 
 export default async function Header() {
   let categories = [];
@@ -12,6 +14,8 @@ export default async function Header() {
   } catch (err) {
     console.error(err);
   }
+  const allCookies = await cookies();
+  const token = allCookies.get("customer_token")?.value;
 
   const renderCategories = () => (
     <nav className=" self-center">
@@ -55,6 +59,9 @@ export default async function Header() {
 
         <div className="flex gap-3 ">
           <CartDrawer buttonSize={30} />
+        </div>
+        <div className="flex gap-3 ">
+          <LoginButton token={token}/>
         </div>
       </div>
     </div>

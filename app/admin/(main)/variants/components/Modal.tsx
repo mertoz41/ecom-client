@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import apiClient from "@/utils/apiClient";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const variantSchema = z.object({
@@ -43,10 +43,7 @@ export default function VariantModal({ isOpen, onClose }: Props) {
 
   const onSubmit = async (data: VariantFormData) => {
     try {
-      console.log(data);
-
       const response = await apiClient.post("/categoryVariants", data);
-      console.log(response);
       onClose();
       router.refresh();
     } catch {
