@@ -2,10 +2,10 @@ import CategoryTable from "./components/Table";
 import apiClient from "@/utils/apiClient";
 
 export default async function Page() {
-  let categories: [];
+  let categories: any[] = [];
   try {
     const response = await apiClient.get("/categories/");
-    categories = response.data;
+    categories = response.data || [];
   } catch {
     console.error("err");
   }
