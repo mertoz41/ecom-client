@@ -2,7 +2,13 @@ import apiClient from "@/utils/apiClient";
 import Table from "./components/Table";
 
 export default async function ProductsPage() {
-  const response = await apiClient.get("products");
+  let products: any[] = [];
+  try {
+    const response = await apiClient.get("products");
+    products = response.data || [];
+  } catch {
+    console.error("err");
+  }
 
   return (
     <div className="space-y-6">
@@ -11,7 +17,7 @@ export default async function ProductsPage() {
       </div>
 
       <div className="overflow-x-auto">
-        <Table products={response?.data} />
+        <Table products={products} />
       </div>
     </div>
   );
