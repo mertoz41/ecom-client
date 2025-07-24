@@ -19,7 +19,6 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function Form() {
   const { login } = useAuthStore();
   const [loginError, setLoginError] = useState("");
-  const addToast = useToastStore((state) => state.addToast)
   const router = useRouter();
   const {
     register,
