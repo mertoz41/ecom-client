@@ -31,7 +31,7 @@ export default function Form() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const loggedInUser = await login(data.email, data.password);
-
+      
       if (loggedInUser.role === "customer") {
         router.push("/");
       } else {

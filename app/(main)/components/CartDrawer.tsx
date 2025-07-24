@@ -17,6 +17,7 @@ export default function CartDrawer({ buttonSize }: { buttonSize: number }) {
     const updatedCart = await removeFromCart(id);
     updateCart(updatedCart);
   };
+
   return (
     <>
       <button

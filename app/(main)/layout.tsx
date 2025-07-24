@@ -4,12 +4,14 @@ import CartInit from "./components/CartInit";
 import AuthInit from "./components/AuthInit";
 import { cookies } from "next/headers";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-    const customerToken =  cookies().get("customer_token")?.value;
+  const cookieStore = await cookies();
+  const customerToken = cookieStore.get("customer_token")?.value;
+  
   return (
     <>
       <Header />
