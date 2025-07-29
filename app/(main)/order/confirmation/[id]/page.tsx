@@ -3,7 +3,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
   const response = await apiClient.get(`/orders/${id}`);
   const order = response.data;
-  console.log(order);
   return (
     <div className="min-h-screen text-black bg-gray-100 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-xl rounded-2xl max-w-2xl w-full p-8">

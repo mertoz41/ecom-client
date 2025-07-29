@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import apiClient from "@/utils/apiClient";
+import { removeUserTokenCookie, saveUserTokenToCookie } from "@/utils/userToken";
 
 interface User {
   id: string;
@@ -38,6 +39,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const res = await apiClient.post("/auth/login", { email, password });
+      if (res.data.user.role === 'customer'){
+        saveUserTokenToCookie(res.data.token, "customer_token")
+      }
       set({ user: res.data.user, loading: false });
       return res.data.user;
     } catch (error) {
@@ -46,10 +50,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  logout: async (url?: string) => {
+  logout: async (tokenKey: string, url?: string) => {
     set({ loading: true });
     try {
       await apiClient.post(`/auth/logout${url ? `/${url}` : ""}`);
+      removeUserTokenCookie(tokenKey)
       set({ user: null, loading: false });
     } catch {
       set({ loading: false });

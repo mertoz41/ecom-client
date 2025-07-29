@@ -33,7 +33,6 @@ export default function Form() {
         ...data,
         role: "customer",
       });
-      console.log(res.data);
       addToast({ message: "Account created!", type: "success" });
       router.push("/login");
     } catch (err) {

@@ -48,7 +48,7 @@ export default function Sidebar() {
         </button>
         <button
           onClick={() => {
-            logout();
+            logout("token");
             router.push("/admin/login");
           }}
         >

@@ -11,7 +11,7 @@ export default function LoginButton({ token }: { token: string }) {
 
   const handleLogout = async () => {
     // Replace this with your logout logic
-    await logout("customer");
+    await logout("customer_token", "customer");
     router.push("/");
     // await logout(); router.push('/');
   };
