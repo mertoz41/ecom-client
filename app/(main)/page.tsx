@@ -3,7 +3,7 @@ import FiltersContainer from "./components/FiltersContainer";
 import SortButton from "./components/SortButton";
 import apiClient from "@/utils/apiClient";
 export default async function Home() {
-  const response = await apiClient.get("/products");
+  const response = await apiClient.get("/api/products");
 
   return (
     <div className="w-full bg-white h-screen overflow-auto py-4">

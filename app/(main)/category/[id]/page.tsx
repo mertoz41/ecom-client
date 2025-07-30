@@ -5,7 +5,7 @@ import SortButton from "../../components/SortButton";
 import Banner from "./Banner";
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const response = await apiClient.get(`/categories/${id}/products`);
+  const response = await apiClient.get(`/api/categories/${id}/products`);
   return (
     <div className="w-full text-black overflow-auto h-screen bg-white py-4">
       <div className="grid px-4 grid-cols-1 md:grid-cols-5 gap-6">

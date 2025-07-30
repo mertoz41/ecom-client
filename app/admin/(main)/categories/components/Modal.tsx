@@ -38,7 +38,7 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
 
   const getVariants = async () => {
     try {
-      const response = await apiClient.get("/categoryVariants");
+      const response = await apiClient.get("/api/categoryVariants");
       setVariants(response.data);
     } catch {
       addToast({ message: "Something went wrong", type: "error" });
@@ -64,7 +64,7 @@ export default function CategoryModal({ isOpen, onClose }: Props) {
       }
       formData.append("primaryVariant", primaryVariant);
       selectedVariants.forEach((vari) => formData.append("variants", vari._id));
-      await apiClient.post("/categories", formData, {
+      await apiClient.post("/api/categories", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

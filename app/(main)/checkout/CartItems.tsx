@@ -12,7 +12,7 @@ export default function CartItems() {
           className="flex items-center gap-4 border-b pb-4"
         >
           <Image
-            src={`http://localhost:3001/uploads/${item.variant.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${item.variant.images[0]}`}
             alt={`product-${item.variant._id}`}
             width={80}
             height={80}

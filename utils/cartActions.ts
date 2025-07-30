@@ -5,7 +5,7 @@ export const getCartItems = async () => {
   if (!cartId) return null;
 
   try {
-    const res = await apiClient.get(`/cart/${cartId}`);
+    const res = await apiClient.get(`/api/cart/${cartId}`);
     return res.data; // returns cart with populated items
   } catch (error) {
     console.error("Failed to get cart:", error);
@@ -17,7 +17,7 @@ export const addToCart = async (variantId: string, quantity = 1) => {
   try {
     const cartId = getCartIdFromCookie();
     // Now send the add-to-cart request
-    const res = await apiClient.post("/cart/add", {
+    const res = await apiClient.post("/api/cart/add", {
       cartId,
       variantId,
       quantity,
@@ -34,7 +34,7 @@ export const removeFromCart = async (variantId: string) => {
   if (!cartId) return;
 
   try {
-    const res = await apiClient.post("/cart/remove", {
+    const res = await apiClient.post("/api/cart/remove", {
       cartId,
       variantId,
     });

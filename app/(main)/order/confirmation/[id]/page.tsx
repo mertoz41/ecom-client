@@ -1,7 +1,7 @@
 import apiClient from "@/utils/apiClient";
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const response = await apiClient.get(`/orders/${id}`);
+  const response = await apiClient.get(`/api/orders/${id}`);
   const order = response.data;
   return (
     <div className="min-h-screen text-black bg-gray-100 flex flex-col items-center justify-center p-6">

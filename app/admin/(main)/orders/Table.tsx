@@ -69,7 +69,7 @@ export default function Table({ orders }: { orders: any[] }) {
                   {/* Image */}
                   {/* process.env.NEXT_PUBLIC_API_URL */}
                   <Image
-                    src={`http://localhost:3001/uploads/${item.variant.images[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${item.variant.images[0]}`}
                     alt="Variant"
                     className="w-16 h-16 object-cover rounded border"
                     width={34}

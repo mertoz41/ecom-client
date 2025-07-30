@@ -35,7 +35,7 @@ const Table: React.FC<TableProps> = ({
                   <td key={key} className="px-4 py-3">
                     {imageFields.includes(key) && typeof value === "string" ? (
                       <Image
-                        src={`http://localhost:3001/uploads/${usage}/${row.image}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${usage}/${row.image}`}
                         height={60}
                         width={60}
                         alt={row.name}

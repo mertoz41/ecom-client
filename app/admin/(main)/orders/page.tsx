@@ -8,7 +8,7 @@ export default async function Page() {
   try {
     const allCookies = await cookies();
     const token = allCookies.get("token")?.value;
-    const response = await apiClient.get("/orders", {
+    const response = await apiClient.get("/api/orders", {
       headers: {
         Cookie: `token=${token}`,
       },

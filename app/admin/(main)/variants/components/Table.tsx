@@ -7,7 +7,7 @@ export default function Table({ variants }: { variants: any[] }) {
   const addToast = useToastStore((state) => state.addToast);
   const deleteVariant = async (id: string) => {
     try {
-      await apiClient.delete(`/categoryVariants/${id}`);
+      await apiClient.delete(`/api/categoryVariants/${id}`);
       addToast({ message: "Variant deleted!", type: "success" });
       router.refresh();
     } catch {

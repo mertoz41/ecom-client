@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 export default async function Header() {
   let categories = [];
   try {
-    const response = await apiClient.get("/categories");
+    const response = await apiClient.get("/api/categories");
     categories = response.data;
   } catch (err) {
     console.error(err);

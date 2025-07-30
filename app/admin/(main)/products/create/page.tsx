@@ -21,7 +21,7 @@ export default function ProductEditor() {
 
   const getCategories = async () => {
     try {
-      const response = await apiClient("/categories");
+      const response = await apiClient("/api/categories");
       setCategories(response.data);
     } catch {
       console.error("something went wrong");
@@ -71,7 +71,7 @@ export default function ProductEditor() {
       });
     });
     try {
-      const response = await apiClient.post("/products", formData, {
+      const response = await apiClient.post("/api/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

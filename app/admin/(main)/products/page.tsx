@@ -3,11 +3,13 @@ import Table from "./components/Table";
 
 export default async function ProductsPage() {
   let products: any[] = [];
+  console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
   try {
-    const response = await apiClient.get("products");
+    const response = await apiClient.get("/api/products");
     products = response.data || [];
-  } catch {
-    console.error("err");
+  } catch (err) {
+    console.error(err);
   }
 
   return (

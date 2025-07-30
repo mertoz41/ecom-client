@@ -4,7 +4,7 @@ import ModalButton from "./components/ModalButton";
 export default async function Page() {
   let categories: any[] = [];
   try {
-    const response = await apiClient.get("/categories/");
+    const response = await apiClient.get("/api/categories/");
     categories = response.data || [];
   } catch {
     console.error("err");

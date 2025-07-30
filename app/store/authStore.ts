@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async (url?: string) => {
     set({ loading: true });
     try {
-      const res = await apiClient.get(`/auth/me${url ? `/${url}` : ""}`);
+      const res = await apiClient.get(`/api/auth/me${url ? `/${url}` : ""}`);
       set({ user: res.data.user, loading: false });
     } catch {
       set({ user: null, loading: false });
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email: string, password: string): Promise<User> => {
     set({ loading: true });
     try {
-      const res = await apiClient.post("/auth/login", { email, password });
+      const res = await apiClient.post("/api/auth/login", { email, password });
       if (res.data.user.role === "customer") {
         saveUserTokenToCookie(res.data.token, "customer_token");
       } else {
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async (tokenKey: string, url?: string) => {
     set({ loading: true });
     try {
-      await apiClient.post(`/auth/logout${url ? `/${url}` : ""}`);
+      await apiClient.post(`/api/auth/logout${url ? `/${url}` : ""}`);
       removeUserTokenCookie(tokenKey);
       set({ user: null, loading: false });
     } catch {

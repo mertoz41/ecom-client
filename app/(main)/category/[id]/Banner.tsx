@@ -9,7 +9,7 @@ export default function Banner({
   return (
     <div className="relative w-full mb-10 h-[250px]">
       <Image
-        src={`http://localhost:3001/uploads/categories/${bgImg}`}
+        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/categories/${bgImg}`}
         alt={title}
         fill
         className="object-cover"

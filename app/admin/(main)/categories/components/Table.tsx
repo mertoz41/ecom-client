@@ -41,7 +41,7 @@ export default function CategoryTable({ categories }: Props) {
 
   const deleteSelected = async () => {
     try {
-      await apiClient.delete("/categories", {
+      await apiClient.delete("/api/categories", {
         data: {
           ids: selectedCategories,
         },
@@ -57,7 +57,7 @@ export default function CategoryTable({ categories }: Props) {
 
   const deleteCategory = async (id: string) => {
     try {
-      await apiClient.delete(`/categories/${id}`);
+      await apiClient.delete(`/api/categories/${id}`);
       addToast({ message: "Category deleted", type: "success" });
 
       router.refresh();
@@ -110,7 +110,7 @@ export default function CategoryTable({ categories }: Props) {
               <td className="px-4 py-3">{index + 1}</td>
               <td className="px-4 py-3">
                 <Image
-                  src={`http://localhost:3001/uploads/categories/${category.image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/categories/${category.image}`}
                   height={60}
                   width={60}
                   alt={category.name}

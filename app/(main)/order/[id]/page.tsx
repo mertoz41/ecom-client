@@ -36,7 +36,7 @@ const OrderSuccessPage: React.FC<OrderSuccessPageProps> = async ({
     const {id} = await params
     let order;
     try{
-        const response = await apiClient(`/orders/${id}`)
+        const response = await apiClient(`/api/orders/${id}`)
     } catch {
         console.error('error')
     }

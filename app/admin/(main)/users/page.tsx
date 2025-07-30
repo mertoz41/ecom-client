@@ -4,7 +4,7 @@ import UserTable from "./Table";
 export default async function Page() {
   const allCookies = await cookies();
   const token = allCookies.get("token")?.value;
-  const response = await apiClient.get("/users", {
+  const response = await apiClient.get("/api/users", {
     headers: {
       Cookie: `token=${token}`,
     },

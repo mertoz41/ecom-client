@@ -8,7 +8,7 @@ import apiClient from "@/utils/apiClient";
 import SizeSelection from "../components/SizeSelection";
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const response = await apiClient.get(`/products/${id}`);
+  const response = await apiClient.get(`/api/products/${id}`);
   // need to populate colors from response.data.product.variants
   const filteredColors = response.data.product.variants
     .filter((vari: any) => vari._id !== id)

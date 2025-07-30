@@ -6,7 +6,7 @@ import Image from "next/image";
 export default async function OrdersSection() {
   const allCookies = await cookies();
   const token = allCookies.get("customer_token")?.value;
-  const response = await apiClient.get("/orders/user", {
+  const response = await apiClient.get("/api/orders/user", {
     headers: {
       Cookie: `token=${token}`,
     },
@@ -49,7 +49,7 @@ export default async function OrdersSection() {
                       {/* Image */}
                       {/* process.env.NEXT_PUBLIC_API_URL */}
                       <Image
-                        src={`http://localhost:3001/uploads/${item.variant.images[0]}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${item.variant.images[0]}`}
                         alt="Variant"
                         className="w-16 h-16 object-cover rounded border"
                         width={34}

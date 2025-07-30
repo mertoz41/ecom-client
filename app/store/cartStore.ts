@@ -29,7 +29,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     set({ loading: true });
     let cartId = getCartIdFromCookie();
     if (!cartId) {
-      const createRes = await apiClient.post("/cart");
+      const createRes = await apiClient.post("/api/cart");
       cartId = createRes.data.cartId;
       saveCartIdToCookie(cartId);
     }

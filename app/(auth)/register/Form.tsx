@@ -29,7 +29,7 @@ export default function Form() {
   const router = useRouter();
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const res = await apiClient.post("/auth/register", {
+      const res = await apiClient.post("/api/auth/register", {
         ...data,
         role: "customer",
       });

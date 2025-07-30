@@ -30,7 +30,7 @@ export default function Table({ products }: { products: any[] }) {
     selectedVariants.length === allVariants.length && allVariants.length > 0;
   const deleteVariant = async (id: string) => {
     try {
-      await apiClient.delete(`/products/${id}`);
+      await apiClient.delete(`/api/products/${id}`);
       addToast({ message: "Product variant deleted", type: "success" });
       router.refresh();
     } catch {
@@ -39,7 +39,7 @@ export default function Table({ products }: { products: any[] }) {
   };
   const deleteSelectedVariants = async () => {
     try {
-      await apiClient.delete("/products", {
+      await apiClient.delete("/api/products", {
         data: {
           ids: selectedVariants,
         },
@@ -96,7 +96,7 @@ export default function Table({ products }: { products: any[] }) {
                 </td>
                 <td className="p-3">
                   <Image
-                    src={`http://localhost:3001/uploads/${variant.images[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${variant.images[0]}`}
                     height={60}
                     width={60}
                     alt={product.name}

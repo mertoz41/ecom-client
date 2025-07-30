@@ -46,7 +46,7 @@ export default function VariantModal({ isOpen, onClose }: Props) {
 
   const onSubmit = async (data: VariantFormData) => {
     try {
-      await apiClient.post("/categoryVariants", data);
+      await apiClient.post("/api/categoryVariants", data);
       onClose();
       addToast({ message: "Variant created!", type: "success" });
       reset();

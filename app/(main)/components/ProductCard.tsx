@@ -9,11 +9,11 @@ export default function ProductCard({
   variant: any;
 }) {
   return (
-    <Link href={`http://localhost:3000/product/${variant._id}`}>
+    <Link href={`${process.env.NEXT_PUBLIC_API_URL}}/product/${variant._id}`}>
       <div className="max-w-[400px] rounded-lg overflow-hidden cursor-pointer shadow hover:shadow-md border border-gray-100">
         <Image
           className="w-full object-cover aspect-[3/4]"
-          src={`http://localhost:3001/uploads/${variant.images[0]}`}
+          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${variant.images[0]}`}
           width={170}
           height={180}
           alt="productimg"

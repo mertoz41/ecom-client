@@ -59,7 +59,7 @@ export default function Form() {
     };
 
     try {
-      const response = await apiClient.post("/orders", objee);
+      const response = await apiClient.post("/api/orders", objee);
       removeCartIdCookie();
       setNewOrderId(response.data.order._id);
     } catch {

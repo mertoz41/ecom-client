@@ -19,7 +19,7 @@ export default function ImageGallery({ images }: { images: string }) {
       <div className="flex flex-col gap-4">
         {images.map((image, i) => (
           <Image
-            src={`http://localhost:3001/uploads/${image}`} // replace with your thumbnails
+            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${image}`} // replace with your thumbnails
             key={i}
             alt={`Shoe thumbnail ${i}`}
             height={24}
@@ -33,7 +33,7 @@ export default function ImageGallery({ images }: { images: string }) {
       {/* Main Image */}
       <div className="relative bg-white rounded-lg shadow-md w-[400px] h-[400px] flex items-center justify-center">
         <Image
-          src={`http://localhost:3001/uploads/${images[currentIndex]}`} // replace with your thumbnails
+          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${images[currentIndex]}`} // replace with your thumbnails
           alt={`product-pic`}
           height={200}
           width={200}
