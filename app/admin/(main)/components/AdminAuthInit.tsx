@@ -8,7 +8,7 @@ export default function AdminAuthInit({ token }: { token: string }) {
 
   useEffect(() => {
     if (token) {
-      checkAuth("admin");
+      checkAuth();
     }
   }, [checkAuth, token]);
 
