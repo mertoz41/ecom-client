@@ -68,14 +68,15 @@ export default function CategoryTable({ categories }: Props) {
   return (
     <div className="overflow-x-auto flex flex-col gap-5 rounded-lg shadow">
       <div className="flex gap-5 justify-end">
-        <ModalButton />
-        <button
-          onClick={() => deleteSelected()}
-          className="border rounded-lg cursor-pointer p-2"
-          disabled={!selectedCategories.length}
-        >
-          delete selected Categories
-        </button>
+        {categories.length ? (
+          <button
+            onClick={() => deleteSelected()}
+            className="border rounded-lg cursor-pointer p-2"
+            disabled={!selectedCategories.length}
+          >
+            delete selected Categories
+          </button>
+        ) : null}
       </div>
       <table className="min-w-full text-sm text-left">
         <thead className="bg-gray-100 text-gray-700 uppercase">
